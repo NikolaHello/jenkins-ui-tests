@@ -11,6 +11,10 @@ class HomePage(BasePage):
         wait = WebDriverWait(self.driver, 10)
         return wait.until(EC.presence_of_element_located(self.NEW_ITEM_LINK)).is_displayed()
 
+    def click_new_item(self):
+        wait = WebDriverWait(self.driver, 10)
+        element = wait.until(EC.element_to_be_clickable(self.NEW_ITEM_LINK))
+        element.click()
 
 
 

@@ -8,23 +8,24 @@ pipeline {
             }
         }
 
-        stage('Debug') {
-            steps {
-                powershell '& "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" --version'
-            }
-        }
-
         stage('Setup') {
             steps {
-                powershell '& "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m pip install --upgrade pip'
-                powershell '& "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m pip install -r requirements.txt'
+                // Используем абсолютный путь к cmd.exe и python.exe
+                bat 'C:\\Windows\\System32\\cmd.exe /c C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install --upgrade pip'
+                bat 'C:\\Windows\\System32\\cmd.exe /c C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install -r requirements.txt'
             }
         }
 
         stage('Test') {
             steps {
-                powershell '& "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m pytest tests/ -v --tb=short'
+                bat 'C:\\Windows\\System32\\cmd.exe /c C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest tests/ -v --tb=short'
             }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'screenshots/*.png', allowEmptyArchive: true
         }
     }
 }

@@ -8,24 +8,24 @@ pipeline {
             }
         }
 
-        stage('Debug') {
+        stage('Setup') {
             steps {
-                bat 'python --version'
-                bat 'pip --version'
-                bat 'dir'
-            }
-        }
-
-        stage('Install') {
-            steps {
-                bat 'pip install pytest selenium webdriver-manager python-dotenv allure-pytest'
+                // Используем полный путь к Python
+                bat 'C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install -r requirements.txt'
             }
         }
 
         stage('Test') {
             steps {
-                bat 'pytest tests/ -v'
+                bat 'C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest tests/ -v --tb=short'
             }
+        }
+    }
+
+    post {
+        always {
+            // Сохраняем результаты
+            archiveArtifacts artifacts: 'screenshots/*.png', allowEmptyArchive: true
         }
     }
 }

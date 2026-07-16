@@ -1,27 +1,22 @@
 pipeline {
     agent any
 
-    environment {
-        JENKINS_URL = "http://localhost:8080"
-    }
-
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Setup') {
+        stage('Install') {
             steps {
-                bat 'C:\\Windows\\System32\\cmd.exe /c C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install --upgrade pip'
-                bat 'C:\\Windows\\System32\\cmd.exe /c C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install -r requirements.txt'
+                bat 'python -m pip install -r requirements.txt'
             }
         }
 
-        stage('Test') {
+        stage('Tests') {
             steps {
-
                 withCredentials([
                     usernamePassword(
                         credentialsId: 'jenkins-login',
@@ -29,7 +24,8 @@ pipeline {
                         passwordVariable: 'JENKINS_PASSWORD'
                     )
                 ]) {
-                bat 'C:\\Windows\\System32\\cmd.exe /c C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest tests/ -v --tb=short'
+                    bat 'python -m pytest tests -v'
+                }
             }
         }
     }

@@ -10,7 +10,8 @@ pipeline {
 
         stage('Setup') {
             steps {
-                // Используем полный путь к Python
+                // Ваш путь к Python
+                bat 'C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install --upgrade pip'
                 bat 'C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install -r requirements.txt'
             }
         }
@@ -24,7 +25,6 @@ pipeline {
 
     post {
         always {
-            // Сохраняем результаты
             archiveArtifacts artifacts: 'screenshots/*.png', allowEmptyArchive: true
         }
     }

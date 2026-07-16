@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     stages {
 
         stage('Checkout') {
@@ -8,28 +9,18 @@ pipeline {
             }
         }
 
-        stage('Install dependencies') {
+        stage('Debug') {
             steps {
-                bat 'pip install -r requirements.txt'
+                bat 'echo %PATH%'
+                bat 'where python'
+                bat 'where pip'
             }
         }
 
         stage('Run UI tests') {
             steps {
-                bat 'pytest -v'
+                bat 'pytest'
             }
-        }
-    }
-
-    post {
-        always {
-            archiveArtifacts artifacts: '**/*.log', allowEmptyArchive: true
-        }
-        success {
-            echo 'Tests passed'
-        }
-        failure {
-            echo 'Tests failed'
         }
     }
 }

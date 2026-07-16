@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -11,15 +10,21 @@ pipeline {
 
         stage('Debug') {
             steps {
-                bat 'echo %PATH%'
-                bat 'where python'
-                bat 'where pip'
+                bat 'python --version'
+                bat 'pip --version'
+                bat 'dir'
             }
         }
 
-        stage('Run UI tests') {
+        stage('Install') {
             steps {
-                bat 'pytest'
+                bat 'pip install pytest selenium webdriver-manager python-dotenv allure-pytest'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'pytest tests/ -v'
             }
         }
     }

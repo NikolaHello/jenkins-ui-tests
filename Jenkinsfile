@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        JENKINS_URL = "http://localhost:8080"
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -10,7 +14,6 @@ pipeline {
 
         stage('Setup') {
             steps {
-                // Используем абсолютный путь к cmd.exe и python.exe
                 bat 'C:\\Windows\\System32\\cmd.exe /c C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install --upgrade pip'
                 bat 'C:\\Windows\\System32\\cmd.exe /c C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pip install -r requirements.txt'
             }
@@ -18,14 +21,16 @@ pipeline {
 
         stage('Test') {
             steps {
+
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'jenkins-login',
+                        usernameVariable: 'JENKINS_USER',
+                        passwordVariable: 'JENKINS_PASSWORD'
+                    )
+                ]) {
                 bat 'C:\\Windows\\System32\\cmd.exe /c C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest tests/ -v --tb=short'
             }
-        }
-    }
-
-    post {
-        always {
-            archiveArtifacts artifacts: 'screenshots/*.png', allowEmptyArchive: true
         }
     }
 }

@@ -14,10 +14,6 @@ def driver():
 def logged_in(driver):
     login_page = LoginPage(driver)
     login_page.open()
-    print("=" * 50)
-    print("USER =", repr(JENKINS_USER))
-    print("PASSWORD =", repr(JENKINS_PASSWORD))
-    print("=" * 50)
     login_page.login(JENKINS_USER, JENKINS_PASSWORD)
 
     return driver
